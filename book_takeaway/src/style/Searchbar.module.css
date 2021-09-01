@@ -1,0 +1,15 @@
+.container {
+    background-color: aquamarine;
+    padding: 20px 40px;
+}
+
+.formContainer {
+    display: flex;
+}
+
+input {
+    height: 30px;
+    font-size: 1em;
+    width: 50vw;
+    margin-right: 1px;
+}

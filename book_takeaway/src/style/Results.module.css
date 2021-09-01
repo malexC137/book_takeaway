@@ -1,0 +1,12 @@
+.container {
+    background-color: cyan;
+    padding: 20px 40px;
+}
+
+.resultsContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
