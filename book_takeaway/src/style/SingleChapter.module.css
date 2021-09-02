@@ -1,0 +1,9 @@
+.container {
+    min-width: 90%;
+    background-color: blueviolet;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}

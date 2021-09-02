@@ -1,0 +1,28 @@
+.container {
+    /* width: 100%; */
+}
+
+.infoContainer {
+    padding: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* align-items: center; */
+}
+
+.textContainer {
+    width: 70%;
+}
+
+.image {
+    width: 20%;
+    min-height: 300px;
+}
+
+.chapterContainer {
+    /* width: 100%; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
