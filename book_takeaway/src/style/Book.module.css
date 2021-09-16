@@ -1,9 +1,8 @@
 .container {
-    /* width: 100%; */
+    padding: 30px;
 }
 
 .infoContainer {
-    padding: 30px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

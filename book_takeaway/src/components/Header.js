@@ -10,13 +10,11 @@ const Header = () => {
                 <FontAwesomeIcon icon={faBookReader} size="2x" />
             </Link>
             <div className={styles.rightContainer}>
-                <Link to="savedbooks">
+                <Link to="/savedbooks">
                     <h2>I miei libri</h2>
 
                 </Link>
-                <a href="">
                     <FontAwesomeIcon icon={faPlusSquare} size="2x" />
-                </a>
             </div>
         </div>
     )

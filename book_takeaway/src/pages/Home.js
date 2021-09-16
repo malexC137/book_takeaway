@@ -1,8 +1,7 @@
 import { useState } from "react";
 import styles from '../style/Searchbar.module.css';
-import Header from "../components/Header";
 import Results from "../components/Results";
-import axios from 'axios';
+import {googleBooks} from '../Axios';
 import Message from "../components/Message";
 
 function App() {
@@ -17,7 +16,7 @@ function App() {
     // Questo controllo serve qualora si cliccasse cerca senza aver digitato niente nell'input,
     // mentre il metodo trim gestisce il caso in cui venissero inseriti solo spazi
     await setLoading(true);
-    const myData = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${inputText}`);
+    const myData = await googleBooks.get(`?q=${inputText}`);
     await setData(myData.data);
     // Il .data appena inserito non è lo stesso data che abbiamo per convenzione già utilizzato in tutta la pagina,
     // ma fa riferimento all'oggetto che ci ritorna la chiamata axios, cioè si chiama proprio così
