@@ -1,52 +1,76 @@
 import { useState } from "react";
-import styles from '../style/Searchbar.module.css';
+import styles from "../style/Searchbar.module.css";
 import Results from "../components/Results";
-import {googleBooks} from '../Axios';
 import Message from "../components/Message";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchBookData,
+  addNewBook,
+} from "../store/actions/handleBookData";
 
 function App() {
-  const [data, setData] = useState([]);
   const [inputText, setInputText] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const fetchData = async () => {
-    if (inputText.trim() === "") {
-      return
-    }
-    // Questo controllo serve qualora si cliccasse cerca senza aver digitato niente nell'input,
-    // mentre il metodo trim gestisce il caso in cui venissero inseriti solo spazi
-    await setLoading(true);
-    const myData = await googleBooks.get(`?q=${inputText}`);
-    await setData(myData.data);
-    // Il .data appena inserito non è lo stesso data che abbiamo per convenzione già utilizzato in tutta la pagina,
-    // ma fa riferimento all'oggetto che ci ritorna la chiamata axios, cioè si chiama proprio così
-    await setLoading(false);
-  }
+  const data = useSelector(state => state.bookReducer.booksData);
+  const savedIds = useSelector(state => state.bookReducer.savedIds);
+  const error = useSelector(state => state.bookReducer.error);
+  const loading = useSelector(state => state.bookReducer.loading);
+
+  const dispatch = useDispatch();
 
   const handleInput = (e) => {
-    setInputText(e.target.value)
-  }
+    setInputText(e.target.value);
+  };
+
+  //Prendere i dati dei libri cercati dall'utente
+  const fetchData = () => {
+    dispatch(fetchBookData(inputText));
+  };
+
+  const addBook = async (doesExist, id, title, key) => {
+    if (doesExist) {
+      alert("Libro già salvato");
+      return;
+    }
+    dispatch(addNewBook(id, title, key))
+  };
 
   const showResults = () => {
     if (data.totalItems === 0) {
-      return <Message error={true} message="Ricerca senza risultati." />
+      return <Message error={true} message="Ricerca senza risultati." />;
     } else if (data.length === 0) {
-      return <Message message="Cerca qualcosa..." />
+      return <Message message="Cerca qualcosa..." />;
     } else {
-      return loading ? <Message message="Sto caricando..." /> : <Results data={data} />
+      return loading ? (
+        <Message message="Sto caricando..." />
+      ) : (
+        <Results
+          error={error}
+          loading={loading}
+          addBook={addBook}
+          savedIds={savedIds}
+          data={data}
+        />
+      );
     }
-  }
+  };
 
   return (
     <div className="App">
       <div className={styles.container}>
         <h1>Cerca un libro</h1>
         <div className={styles.formContainer}>
-          <input value={inputText} onChange={handleInput} type="text" name="" id="" />
+          <input
+            value={inputText}
+            onChange={handleInput}
+            type="text"
+            name=""
+            id=""
+          />
           <button onClick={fetchData}>Cerca</button>
         </div>
       </div>
-      <h1 style={{paddingLeft: '40px'}}>Risultati</h1>
+      <h1 style={{ paddingLeft: "40px" }}>Risultati</h1>
       {showResults()}
     </div>
   );

@@ -1,78 +1,66 @@
-import { firebase } from '../Axios';
-import { useState, useEffect } from 'react';
-import Message from '../components/Message';
-import { Link } from 'react-router-dom';
-
+import { useEffect } from "react";
+import Message from "../components/Message";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchSavedBooks } from "../store/actions/handleBookData";
 
 function SavedBooks() {
-    const [bookData, setBookData] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
+  const bookData = useSelector(state => state.bookReducer.savedBooks);
+  const loading = useSelector(state => state.bookReducer.loading);
+  const error = useSelector(state => state.bookReducer.error);
 
-    useEffect(() => {
-        fetchBook();
-    }, []);
+  const dispatch = useDispatch();
 
-    const fetchBook = async () => {
-        setLoading(true);
-        try {
-            const response = await firebase.get('booksData.json');
-            const bookList = [];
-            for (let key in response.data) {
-                //Aggiungo un oggetto contenente titolo e Id nell'array da iterare
-                bookList.push({
-                    title: response.data[key].bookTitle,
-                    id: response.data[key].bookId,
-                    key: key,
-                })
-            }
-            setBookData(bookList );
-            setLoading(false);
-        } catch (error) {
-            console.log(error);
-            setLoading(false);
-            setError(true);
-        }
-    }
 
-    const renderBookItem = (book) => {
-        return (
-            <div 
-            key={book.id} 
-            style={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center', marginBottom: '20px', backgroundColor: 'blue' }}>
-                <Link style={{textDecoration: 'none'}} to={{
-                    pathname: `book/${book.id}`,
-                    state: {
-                        bookKey: book.key,
-                    }
-                }}>
-                    <p style={{color: 'white'}}>{book.title}</p>
-                </Link>
-            </div>
-        )
-    }
+  useEffect(() => {
+    dispatch(fetchSavedBooks());
+  }, []); 
 
-    const renderListBooks = () => {
-        return bookData.map(item => {
-            return renderBookItem(item);
-        });
-    };
-
+  const renderBookItem = (book) => {
     return (
-        <div>
-            <h1>I miei cazzo di libbri</h1>
-            {error ? (
-                <Message message='Errore di network' error />
-            ) : loading ? (
-                <Message message='Sto caricando...' />
-            ) : (
-                renderListBooks()
-            )}
-        </div>
+      <div
+        key={book.id}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: "20px",
+          backgroundColor: "blue",
+        }}
+      >
+        <Link
+          style={{ textDecoration: "none" }}
+          to={{
+            pathname: `book/${book.id}`,
+            state: {
+              bookKey: book.key,
+            },
+          }}
+        >
+          <p style={{ color: "white" }}>{book.title}</p>
+        </Link>
+      </div>
     );
+  };
+
+  const renderListBooks = () => {
+    return bookData.map((item) => {
+      return renderBookItem(item);
+    });
+  };
+
+  return (
+    <div>
+      <h1>I miei cazzo di libbri</h1>
+      {error ? (
+        <Message message="Errore di network" error />
+      ) : loading ? (
+        <Message message="Sto caricando..." />
+      ) : (
+        renderListBooks()
+      )}
+    </div>
+  );
 }
 
 export default SavedBooks;
